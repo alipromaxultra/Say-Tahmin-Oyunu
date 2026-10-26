@@ -1,1 +1,115 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayı Tahmin Oyunu</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background-color: #1f2c2f;
+            color: white;
+            font-family: 'Helvetica', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            text-align: center;
+            width: 300px;
+        }
+        h1 { font-size: 24px; margin-bottom: 20px; }
+        p { color: #a8b2b7; font-size: 16px; margin-bottom: 20px; }
+        #sayac { color: #40dfef; font-weight: bold; margin-bottom: 15px; }
+        .input-box {
+            background: #273437;
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 10px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        input {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            width: 100px;
+            outline: none;
+        }
+        button {
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:active { background: #5849bc; }
+        #sonuc { font-size: 16px; font-weight: bold; margin-top: 15px; min-height: 24px; color: #ffc107; }
+        #tekrarBtn { background: #00b894; display: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Sayı Tahmin</h1>
+        <p>1 ile 100 arasında bir sayı tuttum. Bakalım ilk tahminin ne olacak?</p>
+        <div id="sayac">Deneme: 0</div>
+        
+        <div class="input-box">
+            <input type="number" id="tahminInput" placeholder="?" autofocus>
+        </div>
+        
+        <button id="tahminBtn" onclick="tahminYap()">TAHMİN ET</button>
+        <div id="sonuc"></div>
+        <button id="tekrarBtn" onclick="oyunuSifirla()">Yeniden Başlat</button>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function tahminYap() {
+            let val = document.getElementById('tahminInput').value;
+            if (!val) return;
+
+            fetch('/tahmin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tahmin: val })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('sonuc').innerText = data.sonuc;
+                if (data.deneme) {
+                    document.getElementById('sayac').innerText = "Deneme: " + data.deneme;
+                }
+                if (data.durum === "bildi") {
+                    document.getElementById('tahminBtn').style.display = "none";
+                    document.getElementById('tekrarBtn').style.display = "block";
+                }
+                document.getElementById('tahminInput').value = "";
+            });
+        }
+
+        function oyunuSifirla() {
+            fetch('/sifirla', { method: 'POST' })
+            .then(() => {
+                document.getElementById('sonuc').innerText = "";
+                document.getElementById('sayac').innerText = "Deneme: 0";
+                document.getElementById('tahminBtn').style.display = "block";
+                document.getElementById('tekrarBtn').style.display = "none";
+            });
+        }
+    </script>
+</body>
+  </html>
 
