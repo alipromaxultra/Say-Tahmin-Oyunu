@@ -1,7 +1,14 @@
 import random
 from flask import Flask, render_template, request, jsonify
 
-app = Flask(__name__)
+import os
+import random
+from flask import Flask, render_template, request, jsonify
+
+# Render'ın klasör yolunu doğrudan bulabilmesi için mutlak yol tanımlıyoruz
+template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
+app = Flask(__name__, template_folder=template_dir)
+
 
 # Sunucu tarafında tutulan oyun durumu (basitlık için)
 oyun_verisi = {
