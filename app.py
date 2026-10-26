@@ -2,9 +2,9 @@ import os
 import random
 from flask import Flask, render_template, request, jsonify
 
-# Render'ın klasör yolunu sorunsuz bulması için mutlak yol tanımı
-template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
-app = Flask(__name__, template_folder=template_dir)
+# Render'ın klasör yolunu sorunsuz bulması için kesin mutlak yol tanımı
+basedir = os.path.abspath(os.path.dirname(__file__))
+app = Flask(__name__, template_folder=os.path.join(basedir, 'templates'))
 
 # Oyun durumu için sözlük
 oyun_verisi = {
@@ -44,3 +44,4 @@ def sifirla():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
