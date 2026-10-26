@@ -1,12 +1,20 @@
 import os
 import random
 from flask import Flask, render_template, request, jsonify
-
-# Render'ın klasör yolunu sorunsuz bulması için kesin mutlak yol tanımı
+ı
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__, template_folder=os.path.join(basedir, 'templates'))
 
-# Oyun durumu için sözlük
+import os
+import random
+from flask import Flask, render_template, request, jsonify
+
+# Flask'in templates klasörünü projenin tam bulunduğu dizinde kafaya takmadan bulması için:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+
+app = Flask(__name__, template_folder=TEMPLATE_DIR)
+
 oyun_verisi = {
     "tutulan_sayi": random.randint(1, 100),
     "tahmin_sayisi": 0
